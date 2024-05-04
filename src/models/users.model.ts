@@ -6,6 +6,7 @@ interface InterfaceUser extends Document {
   email: string;
   password: string;
   role: string;
+  createUser: Date;
 }
 
 // Define el esquema del usuario
@@ -14,6 +15,10 @@ const UserSchema: Schema<InterfaceUser> = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, required: true },
+  createUser: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 // Crea y exporta el modelo basado en el esquema
