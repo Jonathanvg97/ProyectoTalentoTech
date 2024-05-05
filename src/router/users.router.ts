@@ -64,7 +64,7 @@ export default router;
  *                 type: number
  *                 description: Tipo de cliente
  *                 example: 1
- *                 enum: 
+ *                 enum:
  *                   - "[1] Programador, Ingeniero de Software, Diseñador UX/UI"
  *                   - "[2] Médico, Enfermero, Especialista en Salud Mental"
  *                   - "[3] Ingeniero Automotriz, Mecánico de Automóviles, Diseñador de Vehículos"
@@ -88,10 +88,34 @@ export default router;
  *     responses:
  *       200:
  *         description: Usuario creado exitosamente
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Usuario creado exitosamente
  *       400:
  *         description: Error al intentar crear el usuario
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error al intentar crear el usuario
  *       500:
  *         description: Error interno del servidor al intentar crear el usuario
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error interno del servidor
  *
  * /api/users/list:
  *   get:
@@ -100,10 +124,34 @@ export default router;
  *     responses:
  *       200:
  *         description: Listado de usuarios obtenido exitosamente
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Listado de usuarios obtenido exitosamente
  *       400:
  *         description: Error al intentar obtener el listado de usuarios, no se encontró el listado
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error al intentar obtener el listado de usuarios, no se encontró el listado
  *       500:
- *         description: Error al intentar obtener el listado de usuarios
+ *         description: Error interno del servidor
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error interno del servidor
  *
  * /api/users/{id}:
  *   get:
@@ -119,10 +167,34 @@ export default router;
  *     responses:
  *       200:
  *         description: Usuario encontrado exitosamente
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Usuario encontrado exitosamente
  *       400:
  *         description: Error al intentar obtener el usuario, no se encontró el usuario
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error al intentar obtener el usuario, no se encontró el usuario
  *       500:
- *         description: Error al intentar obtener el usuario
+ *         description: Error interno del servidor
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error interno del servidor
  *   delete:
  *     summary: Eliminar un usuario por ID
  *     tags: [Users]
@@ -136,10 +208,34 @@ export default router;
  *     responses:
  *       200:
  *         description: Usuario eliminado exitosamente
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Usuario eliminado exitosamente
  *       400:
  *         description: Error al eliminar el usuario, no se encontró el usuario
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error al eliminar el usuario, no se encontró el usuario
  *       500:
- *         description: Error al intentar eliminar el usuario
+ *         description: Error interno del servidor
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error interno del servidor
  *   put:
  *     summary: Actualizar un usuario por ID
  *     tags: [Users]
@@ -181,7 +277,7 @@ export default router;
  *                 type: number
  *                 description: Tipo de cliente
  *                 example: 1
- *                 enum: 
+ *                 enum:
  *                   - "[1] Programador, Ingeniero de Software, Diseñador UX/UI"
  *                   - "[2] Médico, Enfermero, Especialista en Salud Mental"
  *                   - "[3] Ingeniero Automotriz, Mecánico de Automóviles, Diseñador de Vehículos"
@@ -205,8 +301,32 @@ export default router;
  *     responses:
  *       200:
  *         description: Usuario actualizado exitosamente
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Usuario actualizado exitosamente
  *       400:
  *         description: Error al intentar actualizar el usuario, no se encontró el usuario
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error al intentar actualizar el usuario, no se encontró el usuario
  *       500:
- *         description: Error al intentar actualizar el usuario
+ *         description: Error interno del servidor
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error interno del servidor
  */

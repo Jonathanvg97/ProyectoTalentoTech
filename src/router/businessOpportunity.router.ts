@@ -82,10 +82,35 @@ export default router;
  *     responses:
  *       200:
  *         description: Oportunidad de negocio creada exitosamente
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Oportunidad de negocio creada exitosamente
+ * 
  *       400:
  *         description: Error al intentar crear la oportunidad de negocio
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error al intentar crear la oportunidad de negocio
  *       500:
  *         description: Error interno del servidor al intentar crear la oportunidad de negocio
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error interno del servidor al intentar crear la oportunidad de negocio
  *
  * /api/businessOpportunity/list:
  *   get:
@@ -94,10 +119,34 @@ export default router;
  *     responses:
  *       200:
  *         description: Listado de oportunidades de negocio obtenido exitosamente
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Listado de oportunidades de negocio obtenido exitosamente
  *       400:
  *         description: Error al intentar obtener el listado de oportunidades de negocio, no se encontró el listado
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error al intentar obtener el listado de oportunidades de negocio, no se encontró el listado
  *       500:
  *         description: Error al intentar obtener el listado de oportunidades de negocio
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error interno del servior, error al intentar obtener el listado de oportunidades de negocio
  *
  * /api/businessOpportunity/{id}:
  *   get:
@@ -113,10 +162,34 @@ export default router;
  *     responses:
  *       200:
  *         description: Oportunidad de negocio encontrada exitosamente
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Oportunidad de negocio encontrada exitosamente
  *       400:
  *         description: Error al intentar obtener la oportunidad de negocio, no se encontró la oportunidad
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error al intentar obtener la oportunidad de negocio, no se encontró la oportunidad
  *       500:
  *         description: Error al intentar obtener la oportunidad de negocio
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error inertno del servidor, error al intentar obtener la oportunidad de negocio
  *   delete:
  *     summary: Eliminar una oportunidad de negocio por ID
  *     tags: [Business Opportunity]
@@ -130,10 +203,35 @@ export default router;
  *     responses:
  *       200:
  *         description: Oportunidad de negocio eliminada exitosamente
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Oportunidad de negocio eliminada exitosamente
  *       400:
  *         description: Error al eliminar la oportunidad de negocio, no se encontró la oportunidad
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error al intentar eliminar la oportunidad de negocio, no se encontró la oportunidad
  *       500:
  *         description: Error al intentar eliminar la oportunidad de negocio
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error interno del servidor, error al intentar eliminar la oportunidad de negocio
+ * 
  *   put:
  *     summary: Actualizar una oportunidad de negocio por ID
  *     tags: [Business Opportunity]
@@ -194,8 +292,42 @@ export default router;
  *     responses:
  *       200:
  *         description: Oportunidad de negocio actualizada exitosamente
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Oportunidad de negocio actualizada exitosamente
  *       400:
  *         description: Error al intentar actualizar la oportunidad de negocio, no se encontró la oportunidad
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error al intentar actualizar la oportunidad de negocio, no se encontró la oportunidad
+ *       404:
+ *         description: No se encontró la oportunidad de negocio
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No se encontró la oportunidad de negocio
  *       500:
  *         description: Error al intentar actualizar la oportunidad de negocio
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error interno del servidor, error al intentar actualizar la oportunidad de negocio
  */
