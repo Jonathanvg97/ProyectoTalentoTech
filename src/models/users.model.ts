@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model, Number } from "mongoose";
+import mongoose, { Schema, Document, Model, Types } from "mongoose";
 import { clientTypes } from "../utils/clientTypes.utils";
 
 // Define una interfaz para el modelo de usuario
@@ -8,8 +8,10 @@ interface InterfaceUser extends Document {
   password: string;
   role: string;
   clientType: number;
+  matches: Types.ObjectId[];
   createUser: Date;
 }
+
 // Define el esquema del usuario
 const UserSchema: Schema<InterfaceUser> = new Schema({
   name: { type: String, required: true },
@@ -21,6 +23,7 @@ const UserSchema: Schema<InterfaceUser> = new Schema({
     required: true,
     enum: Object.keys(clientTypes).map(Number),
   },
+  matches: [{ type: Schema.Types.ObjectId, ref: "Match" }],
   createUser: {
     type: Date,
     default: Date.now(),
