@@ -4,6 +4,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./src/swagger";
 import cors from "cors";
 import userRouter from "./src/router/users.router";
+import jobOportunityRouter from "./src/router/businessOpportunity.router";
 
 // Esta función crea y configura la aplicación Express
 export default function createApp(): Application {
@@ -15,6 +16,9 @@ export default function createApp(): Application {
 
   // Ruta de User
   app.use("/api/users", userRouter);
+
+  // Ruta de Oportunidades
+  app.use("/api/businessOpportunity", jobOportunityRouter);
 
   // Ruta de inicio
   //Implementar swagger
