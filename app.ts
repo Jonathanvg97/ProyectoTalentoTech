@@ -6,6 +6,7 @@ import cors from "cors";
 import userRouter from "./src/router/users.router";
 import jobOportunityRouter from "./src/router/businessOpportunity.router";
 import matchRouter from "./src/router/match.router";
+import loginRouter from "./src/router/auth.router";
 
 // Esta función crea y configura la aplicación Express
 export default function createApp(): Application {
@@ -22,7 +23,10 @@ export default function createApp(): Application {
   app.use("/api/businessOpportunity", jobOportunityRouter);
 
   // Ruta de Matches
-  app.use("/api/match", matchRouter)
+  app.use("/api/match", matchRouter);
+
+  // Ruta para iniciar sesión
+  app.use("/api/auth", loginRouter);
 
   // Ruta de inicio
   //Implementar swagger

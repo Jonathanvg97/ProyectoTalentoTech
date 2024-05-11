@@ -63,6 +63,7 @@ export const getUserByID = async (req: Request, res: Response) => {
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await UserModel.find();
+
     res.status(200).json({
       ok: true,
       msg: "usuarios encontrados exitosamente",
