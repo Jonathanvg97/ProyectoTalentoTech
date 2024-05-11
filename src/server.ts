@@ -1,20 +1,61 @@
-import createApp from "../app";
+import express, { Application, Request, Response } from "express";
 import { connectDB } from "./config/database";
-import dotenv from "dotenv";
+import cors from "cors";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./swagger";
+import userRouter from "./router/users.router";
+import jobOportunityRouter from "./router/businessOpportunity.router";
+import matchRouter from "./router/match.router";
+import loginRouter from "./router/auth.router";
 
-// Cargar variables de entorno desde el archivo .env
-dotenv.config();
+class Server {
+  private app: Application;
+  private port: string;
+  private apiPaths = {
+    talentoTechApi: "/",
+    users: "/api/users",
+    bussinessOpportunity: "/api/businessOpportunity",
+    match: "/api/match",
+    auth: "/api/auth",
+  };
 
-//Iniciar la base de datos
-connectDB();
+  constructor() {
+    this.app = express();
+    this.port = process.env.PORT || "3000";
 
-// Obtener la instancia de la aplicación Express
-const app = createApp();
+    // //Iniciar la base de datos
+    connectDB();
 
-// Puerto en el que se ejecutará el servidor
-const PORT = Number(process.env.PORT) || 3000;
+    //Métodos Iniciales
+    this.middlewares();
 
-// Iniciar el servidor
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
-});
+    // Rutas
+    this.routes();
+  }
+
+
+  middlewares() {
+    this.app.use(cors());
+
+    // Lectura del Body
+    this.app.use(express.json());
+
+ 
+  }
+
+  routes(): void {
+    this.app.use(this.apiPaths.users, userRouter);
+    this.app.use(this.apiPaths.bussinessOpportunity, jobOportunityRouter);
+    this.app.use(this.apiPaths.match, matchRouter);
+    this.app.use(this.apiPaths.auth, loginRouter);
+    this.app.use(this.apiPaths.talentoTechApi,swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+  }
+
+  listen(): void {
+    this.app.listen(this.port, () => {
+      console.log("Servidor corriendo por el puerto", this.port);
+    });
+  }
+}
+
+export default Server;
