@@ -31,6 +31,15 @@ export const authenticateLogin = async (req: Request, res: Response) => {
       });
     }
 
+    // Verificar los roles solo si el token se decodifica correctamente
+    const validateRole = user.role ;
+    if (validateRole !== "admin" && validateRole !== "user") {
+      return res.status(403).json({
+        ok: false,
+        msg: "Rol de usuario no permitido",
+      });
+    }
+
     // Generar Token
     const token = await generateJWT(user._id, user.email, user.role);
 

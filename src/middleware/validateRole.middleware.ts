@@ -17,13 +17,11 @@ export const validateRole = (
     if (!role) {
       return res.status(403).json({
         ok: false,
-        msg: "El usuario no tiene un rol especificado",
+        msg: "Rol de usuario no especificado en el token",
       });
     }
 
     if (role === "admin") {
-
-        
       next();
     } else {
       return res.status(403).json({
@@ -32,7 +30,7 @@ export const validateRole = (
       });
     }
   } catch (error) {
-    console.error("Error al validar el rol:", error);
+    console.error("Error al validar el rol del usuario", error);
     return res.status(500).json({
       ok: false,
       msg: "Error al validar el rol del usuario",

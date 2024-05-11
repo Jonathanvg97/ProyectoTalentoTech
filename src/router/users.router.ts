@@ -9,11 +9,10 @@ import {
 import { validateJWT } from "../middleware/validateJWT.middleware";
 import { validateRole } from "../middleware/validateRole.middleware";
 
-
 const router = Router();
 
 // Ruta para crear un nuevo usuario
-router.post("/userCreate", validateJWT,  createUser);
+router.post("/userCreate", validateJWT, createUser);
 
 // Ruta para obtener todos los usuarios
 router.get("/list", validateJWT, validateRole, getAllUsers);
@@ -22,7 +21,7 @@ router.get("/list", validateJWT, validateRole, getAllUsers);
 router.get("/:id", validateJWT, getUserByID);
 
 // Ruta para elimina un usuario
-router.delete("/:id", validateJWT, deleteUserById);
+router.delete("/:id", validateJWT, validateRole, deleteUserById);
 
 //Ruta para actualizar un usuario
 router.put("/:id", validateJWT, updateUserById);
@@ -54,6 +53,8 @@ export default router;
  *   post:
  *     summary: Crear un nuevo usuario
  *     tags: [Users]
+ *     security:
+ *        - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -137,16 +138,6 @@ export default router;
  *                  message:
  *                    type: string
  *                    example: No se encontró el token de autenticación
- *       403:
- *         description: No tienes permisos para realizar esta acción
- *         content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  message:
- *                    type: string
- *                    example: No tienes permisos para realizar esta acción
  *       500:
  *         description: Error interno del servidor al intentar crear el usuario
  *         content:
@@ -216,10 +207,12 @@ export default router;
  *                    type: string
  *                    example: Error interno del servidor
  *
- * /api/users/{id}:
+ * /api/users/{id}/:
  *   get:
  *     summary: Obtener un usuario por ID
  *     tags: [Users]
+ *     security:
+ *        - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -258,16 +251,6 @@ export default router;
  *                  message:
  *                    type: string
  *                    example: No se encontró el token de autenticación
- *       403:
- *         description: No tienes permisos para realizar esta acción
- *         content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  message:
- *                    type: string
- *                    example: No tienes permisos para realizar esta acción
  *       500:
  *         description: Error interno del servidor
  *         content:
@@ -281,6 +264,8 @@ export default router;
  *   delete:
  *     summary: Eliminar un usuario por ID
  *     tags: [Users]
+ *     security:
+ *        - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -342,6 +327,8 @@ export default router;
  *   put:
  *     summary: Actualizar un usuario por ID
  *     tags: [Users]
+ *     security:
+ *        - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -426,16 +413,6 @@ export default router;
  *                  message:
  *                    type: string
  *                    example: No se encontró el token de autenticación
- *       403:
- *         description: No tienes permisos para realizar esta acción
- *         content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  message:
- *                    type: string
- *                    example: No tienes permisos para realizar esta acción
  *       500:
  *         description: Error interno del servidor
  *         content:

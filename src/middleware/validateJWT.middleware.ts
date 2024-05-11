@@ -25,22 +25,9 @@ export const validateJWT = (
   const token = authHeader.replace("Bearer ", "");
 
   try {
-    // const { _id, role } = jwt.verify(token, process.env.JWT_SECRET);
-    // req._id = _id;
-    // req.role = role;
-
-    // if (!role) {
-    //   return res.status(401).json({
-    //     error: "Rol de usuario no especificado en el token",
-    //     message: "El token no contiene información de rol de usuario.",
-    //   });
-    // }
-
-    // console.log("Usuario autenticado con el rol:", role);
-
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decodedToken; // Almacena la información del usuario en req.user
-    
+
     console.log("Usuario autenticado:", decodedToken.role);
     next();
   } catch (error) {
