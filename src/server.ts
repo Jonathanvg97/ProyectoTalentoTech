@@ -3,10 +3,10 @@ import { connectDB } from "./config/database";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swagger";
-import userRouter from "./router/users.router";
-import jobOportunityRouter from "./router/businessOpportunity.router";
-import matchRouter from "./router/match.router";
-import loginRouter from "./router/auth.router";
+import userRouter from "./routes/users.router";
+import bussinessOpportunityRouter from "./routes/businessOpportunity.router";
+import matchRouter from "./routes/match.router";
+import loginRouter from "./routes/auth.router";
 
 class Server {
   private app: Application;
@@ -45,7 +45,7 @@ class Server {
 
   routes(): void {
     this.app.use(this.apiPaths.users, userRouter);
-    this.app.use(this.apiPaths.bussinessOpportunity, jobOportunityRouter);
+    this.app.use(this.apiPaths.bussinessOpportunity, bussinessOpportunityRouter);
     this.app.use(this.apiPaths.match, matchRouter);
     this.app.use(this.apiPaths.auth, loginRouter);
     this.app.use(this.apiPaths.talentoTechApi,swaggerUi.serve, swaggerUi.setup(swaggerSpec))

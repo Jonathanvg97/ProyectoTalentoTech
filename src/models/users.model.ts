@@ -10,6 +10,7 @@ interface InterfaceUser extends Document {
   clientType: number;
   matches: Types.ObjectId[];
   createUser: Date;
+  token?: string ;
 }
 
 // Define el esquema del usuario
@@ -28,6 +29,7 @@ const UserSchema: Schema<InterfaceUser> = new Schema({
     type: Date,
     default: Date.now(),
   },
+  token: { type: String, require: false },
 });
 
 // Crea y exporta el modelo basado en el esquema

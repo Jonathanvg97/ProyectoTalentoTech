@@ -1,10 +1,36 @@
 import { Router } from "express";
-import { authenticateLogin } from "../controllers/auth.controller";
+import { check } from "express-validator";
+import {
+  authenticateLogin,
+  forgetPassword,
+  passwordChange,
+} from "../controllers/auth.controller";
+import { validateFields } from "../middleware/validateFields.middleware";
+import { validateJWTPass } from "../middleware/validateJWT.middleware";
 
 const router = Router();
 
 // Ruta para iniciar sesión
 router.post("/login", authenticateLogin);
+
+router.post(
+  "/forgetPassword",
+  [
+    check("email", "El email es obligatorio").not().isEmpty().isEmail(),
+    validateFields,
+  ],
+  forgetPassword
+);
+
+router.put(
+  "/resetPassword",
+  validateJWTPass,
+  [
+    check("password", "La contrasena es obligatoria").not().isEmpty(),
+    validateFields,
+  ],
+  passwordChange
+);
 
 export default router;
 
