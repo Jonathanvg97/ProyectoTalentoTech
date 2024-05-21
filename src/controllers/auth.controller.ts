@@ -75,7 +75,7 @@ export const forgetPassword = async (req: Request, resp: Response) => {
   const { email, role } = req.body;
 
   try {
-    const existeUsuario = await UserModel.findOne({ email, });
+    const existeUsuario = await UserModel.findOne({ email });
 
     if (!existeUsuario) {
       return resp.status(400).json({
@@ -87,7 +87,13 @@ export const forgetPassword = async (req: Request, resp: Response) => {
     const id = existeUsuario._id;
 
     if (id) {
-      const token = await generateJWT(id, email, existeUsuario.role, "1h", process.env.JWT_SECRET_PASS);
+      const token = await generateJWT(
+        id,
+        email,
+        existeUsuario.role,
+        "1h",
+        process.env.JWT_SECRET_PASS
+      );
 
       existeUsuario.token = token as string;
       await existeUsuario.save();
@@ -139,7 +145,7 @@ export const passwordChange = async (req: CustomRequest, res: Response) => {
     }
 
     const usuario = await UserModel.findOne({ token: tokenPass });
-
+  
     if (!usuario) {
       return res.status(400).json({
         ok: false,

@@ -43,18 +43,20 @@ export const validateJWTPass = (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.header("x-token-pass");
-  console.log(token);
-  if (!token) {
+  const authHeader = req.header("x-token-pass");
+
+  if (!authHeader) {
     return res.status(401).json({
       ok: false,
       msg: "No hay token en la petición",
     });
   }
 
+  const token = authHeader.replace("Bearer ", "");
+
   try {
-    const { _id } = jwt.verify(token, process.env.JWT_SECRET_PASS);
-    req._id = _id;
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET_PASS);
+    req._id = decodedToken;
     next();
   } catch (error) {
     return res.status(401).json({

@@ -8,11 +8,26 @@ import {
 } from "../controllers/users.controller";
 import { validateJWT } from "../middleware/validateJWT.middleware";
 import { validateRole } from "../middleware/validateRole.middleware";
+import { check } from "express-validator";
 
 const router = Router();
 
 // Ruta para crear un nuevo usuario
-router.post("/userCreate", validateJWT, createUser);
+router.post(
+  "/userCreate",
+  check("name", "El nombre es obligatorio").not().isEmpty(),
+  check("email", "El email es obligatorio").not().isEmpty().isEmail(),
+  check(
+    "password",
+    "La contraseña es obligatoria y debe tener al menos 8 caracteres, incluir una mayúscula, una minúscula, un número y un carácter especial"
+  )
+    .isLength({ min: 8 })
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/),
+  check("role", "El rol es obligatorio").not().isEmpty(),
+  check("clientType", "El tipo de cliente es obligatorio").not().isEmpty(),
+  validateJWT,
+  createUser
+);
 
 // Ruta para obtener todos los usuarios
 router.get("/list", validateJWT, validateRole, getAllUsers);
@@ -24,7 +39,21 @@ router.get("/:id", validateJWT, getUserByID);
 router.delete("/:id", validateJWT, validateRole, deleteUserById);
 
 //Ruta para actualizar un usuario
-router.put("/:id", validateJWT, updateUserById);
+router.put(
+  "/:id",
+  [
+    check(
+      "password",
+      "La contraseña debe tener al menos 8 caracteres, incluir una mayúscula, una minúscula, un número y un carácter especial"
+    )
+      .optional()
+      .isLength({ min: 8 })
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/),
+    check("email").optional().isEmail().notEmpty(),
+  ],
+  validateJWT,
+  updateUserById
+);
 
 export default router;
 

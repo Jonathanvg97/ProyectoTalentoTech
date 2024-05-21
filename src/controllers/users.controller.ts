@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import UserModel from "../models/users.model";
+import { validationResult } from "express-validator";
 
 // Ruta para crear un nuevo usuario
 export const createUser = async (req: Request, res: Response) => {
@@ -81,18 +82,52 @@ export const getAllUsers = async (req: Request, res: Response) => {
 export const updateUserById = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { body } = req;
+
+  // Validar los resultados
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ ok: false, errors: errors.array() });
+  }
+
   try {
-    const user = await UserModel.findByIdAndUpdate(id, body, { new: true });
+    const user = await UserModel.findById(id);
     if (!user) {
       return res.status(404).json({
         ok: false,
-        msg: "No se encontro el usuario",
+        msg: "No se encontró el usuario",
       });
     }
+
+    // Si la contraseña está presente en el cuerpo de la solicitud
+    if (body.password) {
+      // Verificar que la nueva contraseña sea distinta a la anterior
+      const isSamePassword = await bcrypt.compare(body.password, user.password);
+      if (isSamePassword) {
+        return res.status(400).json({
+          ok: false,
+          msg: "La nueva contraseña debe ser diferente de la anterior",
+        });
+      }
+
+      // Hashear la nueva contraseña
+      body.password = await bcrypt.hash(body.password, 10);
+    }
+
+    // Actualizar el usuario
+    const updatedUser = await UserModel.findByIdAndUpdate(id, body, {
+      new: true,
+    });
+    if (!updatedUser) {
+      return res.status(404).json({
+        ok: false,
+        msg: "No se encontró el usuario después de la actualización",
+      });
+    }
+
     res.status(200).json({
       ok: true,
-      msg: "usuario actualizado exitosamente",
-      user,
+      msg: "Usuario actualizado exitosamente",
+      user: updatedUser,
     });
   } catch (error) {
     console.error("Error al actualizar el usuario:", error);

@@ -8,17 +8,8 @@ const options: swaggerJSDoc.Options = {
       title: "Proyecto Talento Tech",
       version: "1.0.0",
     },
-    // components: {
-    //   securitySchemes: {
-    //     bearerAuth: {
-    //       type: "http",
-    //       scheme: "bearer",
-    //       bearerFormat: "JWT",
-    //     },
-    //   },
-    // },
   },
-  apis: [`${path.join(__dirname, "./router/*")}`],
+  apis: [`${path.join(__dirname, "./routes/*")}`],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

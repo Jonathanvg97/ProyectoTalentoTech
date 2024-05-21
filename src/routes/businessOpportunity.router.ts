@@ -6,11 +6,23 @@ import {
   getBusinessOpportunityByID,
   updateBusinessOpportunityByID,
 } from "../controllers/businessOpportunity.controller";
+import { check } from "express-validator";
+import { validateFields } from "../middleware/validateFields.middleware";
 
 const router = Router();
 
 // Ruta para crear una nueva oportunidad
-router.post("/create", createBusinessOpportunity);
+router.post(
+  "/create",
+  [
+    check("title").not().isEmpty(),
+    check("description").not().isEmpty(),
+    check("status").not().isEmpty(),
+    check("industry").not().isEmpty(),
+    validateFields,
+  ],
+  createBusinessOpportunity
+);
 
 // Ruta para obtener todas las oportunidades
 router.get("/list", getAllbusinessOpportunity);
@@ -58,7 +70,7 @@ export default router;
  *                 type: number
  *                 description: Industria de la oportunidad de negocio
  *                 example: 1
- *                 enum: 
+ *                 enum:
  *                   - "[1] Tecnología"
  *                   - "[2] Salud"
  *                   - "[3] Automotriz"
@@ -90,7 +102,7 @@ export default router;
  *                  message:
  *                    type: string
  *                    example: Oportunidad de negocio creada exitosamente
- * 
+ *
  *       400:
  *         description: Error al intentar crear la oportunidad de negocio
  *         content:
@@ -231,7 +243,7 @@ export default router;
  *                  message:
  *                    type: string
  *                    example: Error interno del servidor, error al intentar eliminar la oportunidad de negocio
- * 
+ *
  *   put:
  *     summary: Actualizar una oportunidad de negocio por ID
  *     tags: [Business Opportunity]
@@ -264,11 +276,11 @@ export default router;
  *                 type: string
  *                 description: Estado de la oportunidad de negocio
  *                 example: active
-*               industry:
+ *               industry:
  *                 type: number
  *                 description: Industria de la oportunidad de negocio
  *                 example: 1
- *                 enum: 
+ *                 enum:
  *                   - "[1] Tecnología"
  *                   - "[2] Salud"
  *                   - "[3] Automotriz"
