@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import RevokedTokenModel from "../models/revokedTokenModel.model";
 
 const jwt = require("jsonwebtoken");
 
@@ -8,7 +9,7 @@ export interface CustomRequest extends Request {
   user?: any;
 }
 
-export const validateJWT = (
+export const validateJWT = async (
   req: CustomRequest,
   res: Response,
   next: NextFunction
@@ -25,6 +26,15 @@ export const validateJWT = (
   const token = authHeader.replace("Bearer ", "");
 
   try {
+    // Verificar si el token está revocado
+    const revokedToken = await RevokedTokenModel.findOne({ token });
+    if (revokedToken) {
+      return res.status(401).json({
+        ok: false,
+        msg: "Token revocado",
+      });
+    }
+
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decodedToken; // Almacena la información del usuario en req.user
 

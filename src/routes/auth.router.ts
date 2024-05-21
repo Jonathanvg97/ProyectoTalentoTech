@@ -4,9 +4,13 @@ import {
   authenticateLogin,
   forgetPassword,
   passwordChange,
+  signOutUser,
 } from "../controllers/auth.controller";
 import { validateFields } from "../middleware/validateFields.middleware";
-import { validateJWTPass } from "../middleware/validateJWT.middleware";
+import {
+  validateJWT,
+  validateJWTPass,
+} from "../middleware/validateJWT.middleware";
 
 const router = Router();
 
@@ -19,6 +23,8 @@ router.post(
   ],
   authenticateLogin
 );
+
+router.post("/signOut/:id", validateJWT, signOutUser);
 
 router.post(
   "/forgetPassword",

@@ -11,6 +11,7 @@ import { CustomRequest } from "../middleware/validateJWT.middleware";
 import sendEmail from "../helpers/email";
 import path from "path";
 import fs from "fs";
+import RevokedTokenModel from "../models/revokedTokenModel.model";
 
 export const authenticateLogin = async (req: Request, res: Response) => {
   const { email, password, role } = req.body;
@@ -71,8 +72,52 @@ export const authenticateLogin = async (req: Request, res: Response) => {
   }
 };
 
+
+export const signOutUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const authHeader = req.header("Authorization");
+  const token = authHeader ? authHeader.replace("Bearer ", "") : null;
+
+  if (!token) {
+    return res.status(400).json({
+      ok: false,
+      msg: "Token no proporcionado",
+    });
+  }
+
+  try {
+    // Añadir el token a la lista de tokens revocados
+    await RevokedTokenModel.create({ token });
+
+    // Actualizar el usuario para limpiar el token (opcional)
+    const user = await UserModel.findByIdAndUpdate(id, { token: "" }, { new: true });
+
+    // Si el usuario no existe
+    if (!user) {
+      return res.status(404).json({
+        ok: false,
+        msg: "No se encontró el usuario",
+      });
+    }
+
+    // Responder con éxito
+    res.status(200).json({
+      ok: true,
+      msg: "Usuario desconectado correctamente",
+      user,
+    });
+  } catch (error) {
+    console.error("Error al desconectar al usuario:", error);
+    res.status(500).json({
+      ok: false,
+      msg: "Error al desconectar al usuario",
+      error,
+    });
+  }
+};
+
 export const forgetPassword = async (req: Request, resp: Response) => {
-  const { email, role } = req.body;
+  const { email } = req.body;
 
   try {
     const existeUsuario = await UserModel.findOne({ email });
@@ -145,7 +190,7 @@ export const passwordChange = async (req: CustomRequest, res: Response) => {
     }
 
     const usuario = await UserModel.findOne({ token: tokenPass });
-  
+
     if (!usuario) {
       return res.status(400).json({
         ok: false,
