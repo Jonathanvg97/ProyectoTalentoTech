@@ -5,6 +5,11 @@ import { validationResult } from "express-validator";
 
 // Ruta para crear un nuevo usuario
 export const createUser = async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { body } = req;
   try {
     // Hashear la contraseña antes de guardarla
@@ -16,7 +21,8 @@ export const createUser = async (req: Request, res: Response) => {
       email: body.email,
       password: hashedPassword,
       role: body.role,
-      clientType: body.clientType,
+      // Verificar si el usuario es de tipo 'admin' para asignar el campo clientType
+      clientType: body.role === "admin" ? undefined : body.clientType,
       relevantOpportunities: body.relevantOpportunities,
     });
 

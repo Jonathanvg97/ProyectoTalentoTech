@@ -7,6 +7,7 @@ import userRouter from "./routes/users.router";
 import bussinessOpportunityRouter from "./routes/businessOpportunity.router";
 import matchRouter from "./routes/match.router";
 import loginRouter from "./routes/auth.router";
+import notificationRouter from "./routes/notificationMatch.router";
 
 class Server {
   private app: Application;
@@ -17,6 +18,7 @@ class Server {
     bussinessOpportunity: "/api/businessOpportunity",
     match: "/api/match",
     auth: "/api/auth",
+    notificationMatch: "/api/notificationMatch",
   };
 
   constructor() {
@@ -33,22 +35,27 @@ class Server {
     this.routes();
   }
 
-
   middlewares() {
     this.app.use(cors());
 
     // Lectura del Body
     this.app.use(express.json());
-
- 
   }
 
   routes(): void {
     this.app.use(this.apiPaths.users, userRouter);
-    this.app.use(this.apiPaths.bussinessOpportunity, bussinessOpportunityRouter);
+    this.app.use(
+      this.apiPaths.bussinessOpportunity,
+      bussinessOpportunityRouter
+    );
     this.app.use(this.apiPaths.match, matchRouter);
     this.app.use(this.apiPaths.auth, loginRouter);
-    this.app.use(this.apiPaths.talentoTechApi,swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+    this.app.use(this.apiPaths.notificationMatch, notificationRouter);
+    this.app.use(
+      this.apiPaths.talentoTechApi,
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerSpec)
+    );
   }
 
   listen(): void {

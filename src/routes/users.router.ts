@@ -24,8 +24,16 @@ router.post(
     .isLength({ min: 8 })
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/),
   check("role", "El rol es obligatorio").not().isEmpty(),
-  check("clientType", "El tipo de cliente es obligatorio").not().isEmpty(),
-  validateJWT,
+  // Remueve la validación de clientType si el usuario es de tipo 'admin'
+  (req, res, next) => {
+    if (req.body.role === "admin") {
+      return next(); // Si es admin, pasa al siguiente middleware sin validar clientType
+    } else {
+      return check("clientType", "El tipo de cliente es obligatorio")
+        .not()
+        .isEmpty()(req, res, next);
+    }
+  },
   createUser
 );
 

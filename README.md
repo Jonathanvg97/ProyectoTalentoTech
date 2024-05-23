@@ -35,3 +35,15 @@ Una vez que la aplicación esté instalada y en funcionamiento, puedes acceder a
 - **Leer Datos:** Puedes ver todos los datos existentes en la página principal.
 - **Actualizar Datos:** Para actualizar datos existentes, navega a la página de edición y modifica el formulario correspondiente.
 - **Eliminar Datos:** Para eliminar datos existentes, simplemente haz clic en el botón de eliminar en la página principal.
+
+
+Cómo Funciona
+Modelo de Notificación:
+
+Este modelo define la estructura de las notificaciones en tu base de datos.
+Incorporación en el Modelo de Usuario:
+
+Las notificaciones se almacenan como subdocumentos o referencias en el modelo de usuario, permitiendo que las notificaciones se accedan y se gestionen a través del usuario.
+Controlador del Usuario:
+
+Cuando se crea un "match" u otra acción que genera una notificación, el controlador correspondiente se encarga de crear y asociar la notificación al usuario.

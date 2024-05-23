@@ -10,6 +10,10 @@ interface InterfaceUser extends Document {
   clientType: number;
   matches: Types.ObjectId[];
   createdBusinesses: Types.ObjectId[];
+  notificationsMatch: {
+    notificationsMatchId: Types.ObjectId[];
+    statusMatch: string[];
+  };
   createUser: Date;
   token?: string;
 }
@@ -22,18 +26,42 @@ const UserSchema: Schema<InterfaceUser> = new Schema({
   role: { type: String, required: true },
   clientType: {
     type: Number,
-    required: true,
+    // Hacer el campo opcional y definir un enum solo para usuarios no admin
     enum: Object.keys(clientTypes).map(Number),
+    required: function () {
+      return this.role !== "admin"; // El campo es requerido si el rol no es admin
+    },
   },
   matches: [{ type: Schema.Types.ObjectId, ref: "Match" }],
   createdBusinesses: [
     { type: Schema.Types.ObjectId, ref: "BusinessOpportunity" },
   ],
+  notificationsMatch: {
+    notificationsMatchId: [
+      { type: Schema.Types.ObjectId, ref: "NotificationMatch" },
+    ],
+    statusMatch: [
+      {
+        type: String,
+        enum: ["pending", "accepted", "cancelled"],
+        default: "pending",
+      },
+    ],
+  },
   createUser: {
     type: Date,
     default: Date.now(),
   },
   token: { type: String, require: false },
+});
+
+UserSchema.set("toJSON", {
+  transform: (doc, ret, options) => {
+    if (ret.role !== "admin") {
+      delete ret.createdBusinesses;
+    }
+    return ret;
+  },
 });
 
 // Crea y exporta el modelo basado en el esquema
