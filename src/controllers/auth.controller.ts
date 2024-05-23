@@ -72,7 +72,6 @@ export const authenticateLogin = async (req: Request, res: Response) => {
   }
 };
 
-
 export const signOutUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   const authHeader = req.header("Authorization");
@@ -86,11 +85,19 @@ export const signOutUser = async (req: Request, res: Response) => {
   }
 
   try {
+    // Establecer la fecha de expiración a los días que uno determine desde ahora
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 15);
+
     // Añadir el token a la lista de tokens revocados
-    await RevokedTokenModel.create({ token });
+    await RevokedTokenModel.create({ token, expiresAt });
 
     // Actualizar el usuario para limpiar el token (opcional)
-    const user = await UserModel.findByIdAndUpdate(id, { token: "" }, { new: true });
+    const user = await UserModel.findByIdAndUpdate(
+      id,
+      { token: "" },
+      { new: true }
+    );
 
     // Si el usuario no existe
     if (!user) {
@@ -149,6 +156,7 @@ export const forgetPassword = async (req: Request, resp: Response) => {
         __dirname,
         "../templates/forgetPassword.html"
       );
+
       const emailTemplate = fs.readFileSync(templatePath, "utf8");
 
       const personalizarEmail = emailTemplate

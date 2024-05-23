@@ -1,5 +1,6 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, Document, Model, Types } from "mongoose";
 import { industryNames } from "../utils/industryNames.utils";
+import { CustomRequest } from "../middleware/validateRole.middleware";
 
 // Interfaz para el modelo de oportunidad
 interface Opportunity extends Document {
@@ -8,6 +9,10 @@ interface Opportunity extends Document {
   status: string;
   industry: number;
   createdAt: Date;
+  createdBy: {
+    userId: Types.ObjectId;
+    userName: string;
+  };
 }
 
 // Esquema de oportunidad
@@ -21,6 +26,18 @@ const OpportunitySchema: Schema<Opportunity> = new Schema({
     enum: Object.keys(industryNames).map(Number),
   },
   createdAt: { type: Date, default: Date.now },
+  createdBy: {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      default: (req: CustomRequest) => req.user?._id,
+    },
+    userName: {
+      type: String,
+      ref: "User",
+      default: (req: CustomRequest) => req.user?.name,
+    },
+  },
 });
 
 // Modelo de oportunidad

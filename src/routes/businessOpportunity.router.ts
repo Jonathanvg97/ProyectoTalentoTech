@@ -8,6 +8,8 @@ import {
 } from "../controllers/businessOpportunity.controller";
 import { check } from "express-validator";
 import { validateFields } from "../middleware/validateFields.middleware";
+import { validateJWT } from "../middleware/validateJWT.middleware";
+import { validateRole } from "../middleware/validateRole.middleware";
 
 const router = Router();
 
@@ -21,22 +23,34 @@ router.post(
     check("industry").not().isEmpty(),
     validateFields,
   ],
+  validateJWT,
+  validateRole,
   createBusinessOpportunity
 );
 
 // Ruta para obtener todas las oportunidades
-router.get("/list", getAllbusinessOpportunity);
+router.get("/list", validateJWT, validateRole, getAllbusinessOpportunity);
 
 // Ruta para obtener una oportunidad por ID
-router.get("/:id", getBusinessOpportunityByID);
+router.get("/:id", validateJWT, validateRole, getBusinessOpportunityByID);
 
 // Ruta para elimina una oportunidad
-router.delete("/:id", deleteBusinessOpportunityByID);
+router.delete("/:id", validateJWT, validateRole, deleteBusinessOpportunityByID);
 
 // Ruta para actualizar una oportunidad
-router.put("/:id", updateBusinessOpportunityByID);
+router.put("/:id", validateJWT, validateRole, updateBusinessOpportunityByID);
 
 export default router;
+
+/**
+ * @swagger
+ * components:
+ *  securitySchemes:
+ *    bearerAuth:
+ *      type: http
+ *      scheme: bearer
+ *      bearerFormat: JWT
+ */
 
 /**
  * @swagger
@@ -44,6 +58,8 @@ export default router;
  *   post:
  *     summary: Crear una nueva oportunidad de negocio
  *     tags: [Business Opportunity]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -113,6 +129,26 @@ export default router;
  *                  message:
  *                    type: string
  *                    example: Error al intentar crear la oportunidad de negocio
+ *       401:
+ *         description: No se encontró el token de autorización
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No se encontró el token de autorización
+ *       403:
+ *         description: No tiene los permisos suficientes para realizar esta operación
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No tiene los permisos suficientes para realizar esta operación
  *       500:
  *         description: Error interno del servidor al intentar crear la oportunidad de negocio
  *         content:
@@ -128,6 +164,8 @@ export default router;
  *   get:
  *     summary: Obtener todas las oportunidades de negocio
  *     tags: [Business Opportunity]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Listado de oportunidades de negocio obtenido exitosamente
@@ -149,6 +187,26 @@ export default router;
  *                  message:
  *                    type: string
  *                    example: Error al intentar obtener el listado de oportunidades de negocio, no se encontró el listado
+ *       401:
+ *         description: No se encontró el token de autorización
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No se encontró el token de autorización
+ *       403:
+ *         description: No tiene los permisos suficientes para realizar esta operación
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No tiene los permisos suficientes para realizar
  *       500:
  *         description: Error al intentar obtener el listado de oportunidades de negocio
  *         content:
@@ -164,6 +222,8 @@ export default router;
  *   get:
  *     summary: Obtener una oportunidad de negocio por ID
  *     tags: [Business Opportunity]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -192,6 +252,26 @@ export default router;
  *                  message:
  *                    type: string
  *                    example: Error al intentar obtener la oportunidad de negocio, no se encontró la oportunidad
+ *       401:
+ *         description: No se encontró el token de autorización
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No se encontró el token de autorización
+ *       403:
+ *         description: No tiene los permisos suficientes para realizar esta operación
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No tiene los permisos suficientes para realizar
  *       500:
  *         description: Error al intentar obtener la oportunidad de negocio
  *         content:
@@ -205,6 +285,8 @@ export default router;
  *   delete:
  *     summary: Eliminar una oportunidad de negocio por ID
  *     tags: [Business Opportunity]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -233,6 +315,26 @@ export default router;
  *                  message:
  *                    type: string
  *                    example: Error al intentar eliminar la oportunidad de negocio, no se encontró la oportunidad
+ *       401:
+ *         description: No se encontró el token de autorización
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No se encontró el token de autorización
+ *       403:
+ *         description: No tiene los permisos suficientes para realizar esta operación
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No tiene los permisos suficientes para realizar
  *       500:
  *         description: Error al intentar eliminar la oportunidad de negocio
  *         content:
@@ -247,6 +349,8 @@ export default router;
  *   put:
  *     summary: Actualizar una oportunidad de negocio por ID
  *     tags: [Business Opportunity]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -322,6 +426,26 @@ export default router;
  *                  message:
  *                    type: string
  *                    example: Error al intentar actualizar la oportunidad de negocio, no se encontró la oportunidad
+ *       401:
+ *         description: No se encontró el token de autorización
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No se encontró el token de autorización
+ *       403:
+ *         description: No tiene los permisos suficientes para realizar esta operación
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No tiene los permisos suficientes para realizar
  *       404:
  *         description: No se encontró la oportunidad de negocio
  *         content:

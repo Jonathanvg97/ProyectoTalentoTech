@@ -3,6 +3,8 @@ import { NextFunction, Request, Response } from "express";
 export interface CustomRequest extends Request {
   user?: {
     role: string;
+    _id: number;
+    name: string;
   };
 }
 

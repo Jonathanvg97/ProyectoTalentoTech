@@ -5,6 +5,7 @@ const generateJWT = (
   _id: string,
   email: string = "",
   role: string = "",
+  name: string = "",
   expiresIn = "1h", // Duración predeterminada del token
   jwtSecret = process.env.JWT_SECRET
 ) => {
@@ -13,6 +14,7 @@ const generateJWT = (
       _id,
       email,
       role,
+      name,
     };
     jwt.sign(
       payload,

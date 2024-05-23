@@ -1,14 +1,41 @@
 import { Request, Response } from "express";
 import businessOpportunityModel from "../models/businessOpportunity.model";
 import { industryNames } from "../utils/industryNames.utils";
+import UserModel from "../models/users.model";
+import { CustomRequest } from "../middleware/validateRole.middleware";
 
 // Ruta para crear una nueva oportunidad
-export const createBusinessOpportunity = async (req: Request, res: Response) => {
-  const { body } = req;
+export const createBusinessOpportunity = async (
+  req: CustomRequest,
+  res: Response
+) => {
   try {
-    const { title, description, status, industry } = body;
+    // Obtiene el ID del usuario de la solicitud
+    const userId = req.user?._id;
+    // Verificar si se encontró el ID del usuario
+    if (!userId) {
+      return res.status(400).json({
+        ok: false,
+        msg: "Usuario no especificado en la solicitud",
+      });
+    }
 
-    // Verifica si la industria proporcionada es válida
+    // Obtener el usuario correspondiente al ID
+    const user = await UserModel.findById(userId);
+    // Obtener el nombre de usuario del usuario
+    const userName = user?.name;
+
+    // Verificar si se encontró el usuario
+    if (!user) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Usuario no encontrado",
+      });
+    }
+
+    const { title, description, status, industry } = req.body;
+
+    // Verificar si se proporcionó una industria válida
     if (!(industry in industryNames)) {
       return res.status(400).json({
         ok: false,
@@ -16,15 +43,23 @@ export const createBusinessOpportunity = async (req: Request, res: Response) => 
       });
     }
 
-    // Crea la nueva oportunidad de negocio
+    // Crear la nueva oportunidad de negocio y asociarla con el usuario
     const newOpportunity = new businessOpportunityModel({
       title,
       description,
       status,
       industry,
+      createdBy: {
+        userId,
+        userName,
+      },
     });
 
-    await newOpportunity.save();
+    const savedBusiness = await newOpportunity.save();
+
+    // Agregar la oportunidad de negocio al usuario
+    user.createdBusinesses.push(savedBusiness._id);
+    await user.save();
 
     res.status(200).json({
       ok: true,
@@ -82,9 +117,11 @@ export const getBusinessOpportunityByID = async (
     });
   } catch (error) {
     console.error("Error al buscar la oportunidad de negocio:", error);
-    res
-      .status(500)
-      .json({ ok: false, msg: "Error al buscar la oportunidad de negocio", error });
+    res.status(500).json({
+      ok: false,
+      msg: "Error al buscar la oportunidad de negocio",
+      error,
+    });
   }
 };
 
@@ -116,9 +153,11 @@ export const updateBusinessOpportunityByID = async (
     });
   } catch (error) {
     console.error("Error al actualizar la oportunidad de negocio:", error);
-    res
-      .status(500)
-      .json({ ok: false, msg: "Error al actualizar la oportunidad de negocio", error });
+    res.status(500).json({
+      ok: false,
+      msg: "Error al actualizar la oportunidad de negocio",
+      error,
+    });
   }
 };
 
@@ -143,8 +182,10 @@ export const deleteBusinessOpportunityByID = async (
     });
   } catch (error) {
     console.error("Error al eliminar la oportunidad de negocio:", error);
-    res
-      .status(500)
-      .json({ ok: false, msg: "Error al eliminar la oportunidad de negocio", error });
+    res.status(500).json({
+      ok: false,
+      msg: "Error al eliminar la oportunidad de negocio",
+      error,
+    });
   }
 };

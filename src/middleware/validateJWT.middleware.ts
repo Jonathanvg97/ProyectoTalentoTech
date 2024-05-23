@@ -7,6 +7,7 @@ export interface CustomRequest extends Request {
   _id?: number;
   role?: string;
   user?: any;
+  name?: string;
 }
 
 export const validateJWT = async (

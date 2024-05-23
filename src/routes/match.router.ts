@@ -5,30 +5,50 @@ import {
   getMacthByID,
   getMatches,
 } from "../controllers/match.controller";
+import { check } from "express-validator";
+import { validateJWT } from "../middleware/validateJWT.middleware";
 
 const router = Router();
 
 //Ruta para realizar un match
-router.post("/createMatch", createMatch);
+router.post(
+  "/createMatch",
+  check("userId").not().isEmpty(),
+  check("businessId").not().isEmpty(),
+  validateJWT,
+  createMatch
+);
 
 //Ruta para obtener todos los matches
-router.get("/list", getMatches);
+router.get("/list", validateJWT, getMatches);
 
 //Ruta para obtener un match by ID
-router.get("/:id", getMacthByID);
+router.get("/:id", validateJWT, getMacthByID);
 
 //Ruta para eliminar un match
-router.delete("/:id", deleteMatch);
+router.delete("/:id", validateJWT, deleteMatch);
 
 export default router;
 
 //Componente de Usuarios swagger
 /**
  * @swagger
+ * components:
+ *  securitySchemes:
+ *    bearerAuth:
+ *      type: http
+ *      scheme: bearer
+ *      bearerFormat: JWT
+ */
+
+/**
+ * @swagger
  *  /api/match/createMatch:
  *   post:
  *      summary: Crear un nuevo match
  *      tags: [Match]
+ *      security:
+ *        - bearerAuth: []
  *      requestBody:
  *        required: true
  *        content:
@@ -69,6 +89,16 @@ export default router;
  *                  message:
  *                    type: string
  *                    example: No hay coincidencia entre el usuario y la oportunidad de negocio
+ *        401:
+ *          description: No se encontró el token de autenticación
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No se encontró el token de autenticación
  *        500:
  *          description: Error interno del servidor
  *          content:
@@ -104,6 +134,8 @@ export default router;
  *   get:
  *      summary: Obtener todos los matches
  *      tags: [Match]
+ *      security:
+ *        - bearerAuth: []
  *      responses:
  *        200:
  *          description: Todos los matches
@@ -125,6 +157,16 @@ export default router;
  *                  message:
  *                    type: string
  *                    example: Error interno del servidor
+ *        401:
+ *          description: No se encontró el token de autenticación
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No se encontró el token de autenticación
  *        404:
  *          description: No se encontró ningún match
  *          content:
@@ -140,6 +182,8 @@ export default router;
  *    get:
  *      summary: Obtener un match por ID
  *      tags: [Match]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
@@ -168,20 +212,32 @@ export default router;
  *                  message:
  *                    type: string
  *                    example: Error interno del servidor
+ *        401:
+ *          description: No se encontró el token de autenticación
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No se encontró el token de autenticación
  *        404:
  *          description: No se encontró el match
  *          content:
  *            application/json:
  *              schema:
- *                type: object  
+ *                type: object
  *                properties:
  *                  message:
  *                    type: string
  *                    example: No se encontró el match
- * 
+ *
  *    delete:
  *      summary: Eliminar un match
  *      tags: [Match]
+ *      security:
+ *        - bearerAuth: []
  *      parameters:
  *        - in: path
  *          name: id
@@ -210,6 +266,16 @@ export default router;
  *                  message:
  *                    type: string
  *                    example: Error interno del servidor
+ *        401:
+ *          description: No se encontró el token de autenticación
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No se encontró el token de autenticación
  *        404:
  *          description: No se encontró el match
  *          content:

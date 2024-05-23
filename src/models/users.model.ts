@@ -9,8 +9,9 @@ interface InterfaceUser extends Document {
   role: string;
   clientType: number;
   matches: Types.ObjectId[];
+  createdBusinesses: Types.ObjectId[];
   createUser: Date;
-  token?: string ;
+  token?: string;
 }
 
 // Define el esquema del usuario
@@ -25,6 +26,9 @@ const UserSchema: Schema<InterfaceUser> = new Schema({
     enum: Object.keys(clientTypes).map(Number),
   },
   matches: [{ type: Schema.Types.ObjectId, ref: "Match" }],
+  createdBusinesses: [
+    { type: Schema.Types.ObjectId, ref: "BusinessOpportunity" },
+  ],
   createUser: {
     type: Date,
     default: Date.now(),

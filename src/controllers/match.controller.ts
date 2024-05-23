@@ -7,7 +7,6 @@ export const createMatch = async (req: Request, res: Response) => {
   try {
     // Obtener el ID del usuario y el ID de la oportunidad de negocio del cuerpo de la solicitud
     const { userId, businessId } = req.body;
-
     // Buscar el usuario y la oportunidad de negocio en la base de datos
     const user = await UserModel.findById(userId);
     const business = await businessOpportunityModel.findById(businessId);
