@@ -8,6 +8,7 @@ export const createMatch = async (req: Request, res: Response) => {
   try {
     // Obtener el ID del usuario y el ID de la oportunidad de negocio del cuerpo de la solicitud
     const { userId, businessId } = req.body;
+
     // Buscar el usuario y la oportunidad de negocio en la base de datos
     const user = await UserModel.findById(userId);
     const business = await businessOpportunityModel.findById(businessId);
@@ -51,36 +52,28 @@ export const createMatch = async (req: Request, res: Response) => {
 
       // Agregar el ID del match al array de matches del usuario
       user.matches.push(newMatch._id);
+      user.save();
 
-      // Crear notificación para el usuario
-      const userNotificationMessage = `"${user.name}", Tienes un nuevo match con la oportunidad "${business.title}", ¿deseas aceptarlo?`;
-      const userNotification = new NotificationMatchModel({
-        userId: userId,
-        message: userNotificationMessage,
-        status: "pending",
-      });
-      await userNotification.save();
-      user.notificationsMatch.notificationsMatchId.push(userNotification._id);
-      user.notificationsMatch.statusMatch.push(userNotification.status);
-
-      // Encontrar y notificar al administrador
+      // Obtener el administrador de la oportunidad de negocio
       const adminUser = await UserModel.findById(business.createdBy.userId);
       if (adminUser) {
-        const adminNotificationMessage = `Tu oportunidad de negocio "${business.title}" ha recibido un nuevo match de "${user.name}".`;
-        const adminNotification = new NotificationMatchModel({
-          userId: business.createdBy.userId,
-          message: adminNotificationMessage,
+        // Agregar el ID del match al array de matches del administrador
+        adminUser.matches.push(newMatch._id);
+        await adminUser.save();
+
+        // Crear notificación para ambos usuarios
+        const notificationMessageForUser = `"${user.name}", Tienes un nuevo match con la oportunidad "${business.title}", ¿deseas aceptarlo?`;
+        const notificationMessageForAdmin = `${adminUser.name}, Tu oportunidad de negocio "${business.title}" ha recibido un nuevo match de "${user.name}", ¿deseas aceptarlo?`;
+        const notification = new NotificationMatchModel({
+          userId: userId,
+          userMessages: {
+            user: notificationMessageForUser,
+            admin: notificationMessageForAdmin,
+          },
           status: "pending",
         });
-        await adminNotification.save();
-        adminUser.notificationsMatch.notificationsMatchId.push(
-          adminNotification._id
-        );
-        adminUser.notificationsMatch.statusMatch.push(adminNotification.status);
-        await adminUser.save();
+        await notification.save();
       }
-
-      await user.save();
 
       return res
         .status(200)

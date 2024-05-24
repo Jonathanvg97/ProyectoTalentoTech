@@ -10,10 +10,6 @@ interface InterfaceUser extends Document {
   clientType: number;
   matches: Types.ObjectId[];
   createdBusinesses: Types.ObjectId[];
-  notificationsMatch: {
-    notificationsMatchId: Types.ObjectId[];
-    statusMatch: string[];
-  };
   createUser: Date;
   token?: string;
 }
@@ -36,18 +32,6 @@ const UserSchema: Schema<InterfaceUser> = new Schema({
   createdBusinesses: [
     { type: Schema.Types.ObjectId, ref: "BusinessOpportunity" },
   ],
-  notificationsMatch: {
-    notificationsMatchId: [
-      { type: Schema.Types.ObjectId, ref: "NotificationMatch" },
-    ],
-    statusMatch: [
-      {
-        type: String,
-        enum: ["pending", "accepted", "cancelled"],
-        default: "pending",
-      },
-    ],
-  },
   createUser: {
     type: Date,
     default: Date.now(),
