@@ -2,6 +2,8 @@ import mongoose, { Schema, Document, Model, Types } from "mongoose";
 
 interface InterfaceNotification extends Document {
   userId: mongoose.Types.ObjectId;
+  adminId: mongoose.Types.ObjectId;
+  businessId: mongoose.Types.ObjectId;
   userMessages: {
     user: string;
     admin: string;
@@ -13,9 +15,11 @@ interface InterfaceNotification extends Document {
 
 const NotificationMatchSchema: Schema<InterfaceNotification> = new Schema({
   userId: { type: Schema.Types.ObjectId, required: true },
+  adminId: { type: Schema.Types.ObjectId, required: true },
+  businessId: { type: Schema.Types.ObjectId, required: true },
   userMessages: {
     user: { type: String },
-    admin: { type: String }
+    admin: { type: String },
   },
   status: {
     type: String,

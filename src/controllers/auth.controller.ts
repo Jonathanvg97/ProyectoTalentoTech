@@ -136,15 +136,16 @@ export const forgetPassword = async (req: Request, resp: Response) => {
       });
     }
 
-    const id = existeUsuario._id;
+    const id = existeUsuario._id.toString(); // Convertimos el ObjectId a string
 
     if (id) {
       const token = await generateJWT(
-        id,
-        email,
-        existeUsuario.role,
-        "1h",
-        process.env.JWT_SECRET_PASS
+        id, 
+        email, 
+        existeUsuario.role, 
+        existeUsuario.name,
+        "1h", 
+        process.env.JWT_SECRET_PASS // Secreto para el token de restablecimiento de contraseña
       );
 
       existeUsuario.token = token as string;

@@ -3,12 +3,20 @@ import UserModel from "../models/users.model";
 import MatchModel from "../models/match.model";
 import businessOpportunityModel from "../models/businessOpportunity.model";
 import NotificationMatchModel from "../models/notificationMatch.model";
+import { CustomRequest } from "../middleware/validateRole.middleware";
 
-export const createMatch = async (req: Request, res: Response) => {
+export const createMatch = async (req: CustomRequest, res: Response) => {
   try {
+    // Obtener el usuario desde el token JWT
+    const userFromToken = req.user?.role;
+
+    // Verificar si el usuario es un administrador
+    if (userFromToken === "admin") {
+      return res.status(403).json({ message: "El admin no puede crear match" });
+    }
+
     // Obtener el ID del usuario y el ID de la oportunidad de negocio del cuerpo de la solicitud
     const { userId, businessId } = req.body;
-
     // Buscar el usuario y la oportunidad de negocio en la base de datos
     const user = await UserModel.findById(userId);
     const business = await businessOpportunityModel.findById(businessId);
@@ -19,10 +27,14 @@ export const createMatch = async (req: Request, res: Response) => {
         .json({ message: "Usuario o oportunidad de negocio no encontrados" });
     }
 
+    if (user.role === "admin") {
+      return res.status(403).json({ message: "El admin no puede crear match" });
+    }
+
     // Verificar si el usuario ya hizo match con esta oportunidad de negocio
     const existingMatch = await MatchModel.findOne({
-      user: userId,
-      business: businessId,
+      "user.userId": userId,
+      "business.businessId": businessId,
     });
 
     if (existingMatch) {
@@ -66,6 +78,8 @@ export const createMatch = async (req: Request, res: Response) => {
         const notificationMessageForAdmin = `${adminUser.name}, Tu oportunidad de negocio "${business.title}" ha recibido un nuevo match de "${user.name}", ¿deseas aceptarlo?`;
         const notification = new NotificationMatchModel({
           userId: userId,
+          adminId: adminUser._id,
+          businessId: businessId,
           userMessages: {
             user: notificationMessageForUser,
             admin: notificationMessageForAdmin,

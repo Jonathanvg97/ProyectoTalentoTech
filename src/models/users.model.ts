@@ -29,9 +29,13 @@ const UserSchema: Schema<InterfaceUser> = new Schema({
     },
   },
   matches: [{ type: Schema.Types.ObjectId, ref: "Match" }],
-  createdBusinesses: [
-    { type: Schema.Types.ObjectId, ref: "BusinessOpportunity" },
-  ],
+  createdBusinesses: {
+    type: [{ type: Schema.Types.ObjectId, ref: "BusinessOpportunity" }],
+    // Hacer el campo opcional solo para usuarios con el rol de administrador
+    required: function () {
+      return this.role === "admin";
+    },
+  },
   createUser: {
     type: Date,
     default: Date.now(),

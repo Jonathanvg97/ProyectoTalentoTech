@@ -16,6 +16,7 @@ const generateJWT = (
       role,
       name,
     };
+
     jwt.sign(
       payload,
       jwtSecret,
