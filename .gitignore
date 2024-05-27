@@ -17,3 +17,4 @@ dist/
 # No incluir package-lock.json en el control de versiones
 !.gitkeep
 
+.vercel
