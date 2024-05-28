@@ -30,10 +30,96 @@ router.put(
 );
 
 // Controlador para cancelar una notificación por el usuario
-router.put("/notifications/user/:notificationId/cancel",validateJWT, cancelNotificationByUser);
+router.put(
+  "/notifications/user/:notificationId/cancel",
+  validateJWT,
+  cancelNotificationByUser
+);
 
 // Controlador para cancelar una notificación por el administrador
-router.put("/notifications/admin/:notificationId/cancel", validateJWT, validateRole, cancelNotificationByAdmin);
-
+router.put(
+  "/notifications/admin/:notificationId/cancel",
+  validateJWT,
+  validateRole,
+  cancelNotificationByAdmin
+);
 
 export default router;
+
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: API para la gestión de notificaciones
+ */
+
+/**
+ * @swagger
+ * components:
+ *  securitySchemes:
+ *    bearerAuth:
+ *      type: http
+ *      scheme: bearer
+ *      bearerFormat: JWT
+ */
+
+/**
+ * @swagger
+ * /api/notificationMatch/list/{id}:
+ *  get:
+ *    summary: obtener una notificación por ID
+ *    tags: [Notifications Match]
+ *    security:
+ *     - bearerAuth: []
+ *    parameters:
+ *    - in: path
+ *      name: id
+ *      required: true
+ *      description: ID de la notificación del match
+ *      schema:
+ *        type: string
+ *    responses:
+ *       200:
+ *         description: Notificación encontrado exitosamente
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Notificación encontrado exitosamente
+ *       400:
+ *         description: Error al intentar obtener la Notificación, no se encontró la Notificación
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error al intentar obtener la Notificación, no se encontró la Notificación
+ *       401:
+ *         description: No se encontró el token de autenticación
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: No se encontró el token de autenticación
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: Error interno del servidor
+ *
+ *
+ *
+ */
