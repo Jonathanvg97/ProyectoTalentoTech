@@ -8,6 +8,7 @@ import bussinessOpportunityRouter from "./routes/businessOpportunity.router";
 import matchRouter from "./routes/match.router";
 import loginRouter from "./routes/auth.router";
 import notificationRouter from "./routes/notificationMatch.router";
+import path from "path"; // Importamos la librería 'path' para manejar rutas de archivos
 
 class Server {
   private app: Application;
@@ -21,9 +22,6 @@ class Server {
     notificationMatch: "/api/notificationMatch",
   };
 
-  private CSS_URL =
-    "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
-
   constructor() {
     this.app = express();
     this.port = process.env.PORT || "3000";
@@ -36,17 +34,14 @@ class Server {
 
     // Rutas
     this.routes();
-
-    // Configurar la interfaz de Swagger-UI
-    this.setupSwaggerUI();
   }
 
-  middlewares() {
+  private middlewares() {
     this.app.use(cors());
     this.app.use(express.json());
   }
 
-  routes(): void {
+  private routes(): void {
     this.app.use(this.apiPaths.users, userRouter);
     this.app.use(
       this.apiPaths.bussinessOpportunity,
@@ -55,17 +50,22 @@ class Server {
     this.app.use(this.apiPaths.match, matchRouter);
     this.app.use(this.apiPaths.auth, loginRouter);
     this.app.use(this.apiPaths.notificationMatch, notificationRouter);
-  }
 
-  setupSwaggerUI(): void {
+    // Ruta para servir Swagger UI
     this.app.use(
       this.apiPaths.talentoTechApi,
-      swaggerUi.serve,
-      swaggerUi.setup(swaggerSpec, { customCssUrl: this.CSS_URL })
+      swaggerUi.serve, // Middleware para servir archivos estáticos de Swagger-UI
+      swaggerUi.setup(swaggerSpec) // Configuración de Swagger UI
+    );
+
+    // Ruta para servir Swagger UI CSS
+    this.app.use(
+      "/public/css", // Ruta pública para el archivo CSS de Swagger UI
+      express.static(path.join(__dirname, "../node_modules/swagger-ui-dist")) // Middleware para servir archivos estáticos
     );
   }
 
-  listen(): void {
+  public listen(): void {
     this.app.listen(this.port, () => {
       console.log("Servidor corriendo por el puerto", this.port);
     });
