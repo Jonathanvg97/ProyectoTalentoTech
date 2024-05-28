@@ -13,8 +13,8 @@ class Server {
   private app: Application;
   private port: string;
   private apiPaths = {
-    talentoTechApi: "/api",
-    users: "/",
+    talentoTechApi: "/api/docs",
+    users: "/api/users",
     bussinessOpportunity: "/api/businessOpportunity",
     match: "/api/match",
     auth: "/api/auth",
