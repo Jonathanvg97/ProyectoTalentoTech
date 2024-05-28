@@ -14,7 +14,7 @@ class Server {
   private port: string;
   private apiPaths = {
     talentoTechApi: "/api",
-    users: "/api/users",
+    users: "/",
     bussinessOpportunity: "/api/businessOpportunity",
     match: "/api/match",
     auth: "/api/auth",

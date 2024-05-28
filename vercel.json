@@ -8,6 +8,10 @@
   ],
   "routes": [
     {
+      "src": "/(swagger-ui-bundle\\.js|swagger-ui-standalone-preset\\.js|swagger-ui\\.css)",
+      "dest": "/public/$1"
+    },
+    {
       "src": "/.*",
       "dest": "app.ts"
     }
