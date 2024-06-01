@@ -3,6 +3,14 @@ import bcrypt from "bcrypt";
 import UserModel from "../models/users.model";
 import { validationResult } from "express-validator";
 
+// Interfaz para los errores esperados
+interface MongoError extends Error {
+  code?: number;
+  keyPattern?: {
+    email?: any;
+  };
+}
+
 // Ruta para crear un nuevo usuario
 export const createUser = async (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -34,11 +42,23 @@ export const createUser = async (req: Request, res: Response) => {
       msg: "Usuario creado exitosamente",
       user: newUser,
     });
-  } catch (error) {
+  } catch (err) {
+    const error = err as MongoError;
     console.error("Error al crear el usuario:", error);
-    res
-      .status(500)
-      .json({ ok: false, msg: "Error al crear el usuario", error });
+
+    // Verificar si el error es por un correo ya registrado
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
+      res.status(500).json({
+        ok: false,
+        msg: "Correo ya registrado",
+      });
+    } else {
+      res.status(500).json({
+        ok: false,
+        msg: "Error al crear el usuario",
+        error,
+      });
+    }
   }
 };
 
