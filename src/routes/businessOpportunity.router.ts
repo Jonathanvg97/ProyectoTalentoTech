@@ -29,7 +29,7 @@ router.post(
 );
 
 // Ruta para obtener todas las oportunidades
-router.get("/list", validateJWT, validateRole, getAllbusinessOpportunity);
+router.get("/list", validateJWT, getAllbusinessOpportunity);
 
 // Ruta para obtener una oportunidad por ID
 router.get("/:id", validateJWT, validateRole, getBusinessOpportunityByID);
