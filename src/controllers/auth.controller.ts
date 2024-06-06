@@ -14,7 +14,7 @@ import fs from "fs";
 import RevokedTokenModel from "../models/revokedTokenModel.model";
 
 export const authenticateLogin = async (req: Request, res: Response) => {
-  const { email, password, role } = req.body;
+  const { email, password } = req.body;
 
   try {
     // Verificar el email

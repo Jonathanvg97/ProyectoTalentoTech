@@ -33,7 +33,7 @@ export const createBusinessOpportunity = async (
       });
     }
 
-    const { title, description, status, industry } = req.body;
+    const { title, description, industry } = req.body;
 
     // Verificar si se proporcionó una industria válida
     if (!(industry in industryNames)) {
@@ -47,7 +47,7 @@ export const createBusinessOpportunity = async (
     const newOpportunity = new businessOpportunityModel({
       title,
       description,
-      status,
+      status: "active",
       industry,
       createdBy: {
         userId,
