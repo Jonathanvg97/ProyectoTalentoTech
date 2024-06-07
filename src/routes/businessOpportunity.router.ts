@@ -32,7 +32,7 @@ router.post(
 router.get("/list", validateJWT, getAllbusinessOpportunity);
 
 // Ruta para obtener una oportunidad por ID
-router.get("/:id", validateJWT, validateRole, getBusinessOpportunityByID);
+router.get("/:id", validateJWT,  getBusinessOpportunityByID);
 
 // Ruta para elimina una oportunidad
 router.delete("/:id", validateJWT, validateRole, deleteBusinessOpportunityByID);
