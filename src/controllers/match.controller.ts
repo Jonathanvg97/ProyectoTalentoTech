@@ -87,6 +87,10 @@ export const createMatch = async (req: CustomRequest, res: Response) => {
           status: "pending",
         });
         await notification.save();
+
+        // Asignar el _id de la notificación al campo notificationId del match
+        newMatch.notificationId = notification._id;
+        await newMatch.save();
       }
 
       return res

@@ -4,6 +4,7 @@ import mongoose, { Schema, Document, Model, Types } from "mongoose";
 
 // Define una interfaz para el modelo de match
 interface InterfaceMatch extends Document {
+  notificationId: Types.ObjectId;
   user: {
     userId: Types.ObjectId;
     userName: string;
@@ -21,6 +22,7 @@ interface InterfaceMatch extends Document {
 
 // Define el esquema del match
 const MatchSchema: Schema<InterfaceMatch> = new Schema({
+  notificationId: { type: Schema.Types.ObjectId, ref: "NotificationMatch" },
   user: {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     userName: {
