@@ -12,7 +12,10 @@ import sendEmail from "../helpers/email";
 import path from "path";
 import fs from "fs";
 import RevokedTokenModel from "../models/revokedTokenModel.model";
+import { config } from "../config/config";
 
+const environment = config[process.env.NODE_ENV || 'desarrollo'];
+const frontendUrl = environment.frontendUrl;
 export const authenticateLogin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
@@ -160,13 +163,8 @@ export const forgetPassword = async (req: Request, resp: Response) => {
 
       const emailTemplate = fs.readFileSync(templatePath, "utf8");
 
-        // Determinar la URL del frontend basado en el entorno
-        const frontendUrl = process.env.NODE_ENV === 'production' 
-        ? process.env.FRONTEND_URL_PRODUCTION 
-        : process.env.FRONTEND_URL_DESARROLLO;
-
       // Construir el enlace para restablecer la contraseña
-      const resetLink = `${frontendUrl}/resetPassword?token=${token}`;
+      const resetLink = `${frontendUrl}/reset-password?token=${token}`;
 
       const personalizarEmail = emailTemplate
         .replace("{{name}}", name)
