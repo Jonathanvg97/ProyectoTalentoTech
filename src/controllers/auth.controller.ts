@@ -140,11 +140,11 @@ export const forgetPassword = async (req: Request, resp: Response) => {
 
     if (id) {
       const token = await generateJWT(
-        id, 
-        email, 
-        existeUsuario.role, 
+        id,
+        email,
+        existeUsuario.role,
         existeUsuario.name,
-        "1h", 
+        "1h",
         process.env.JWT_SECRET_PASS // Secreto para el token de restablecimiento de contraseña
       );
 
@@ -160,19 +160,28 @@ export const forgetPassword = async (req: Request, resp: Response) => {
 
       const emailTemplate = fs.readFileSync(templatePath, "utf8");
 
+        // Determinar la URL del frontend basado en el entorno
+        const frontendUrl = process.env.NODE_ENV === 'production' 
+        ? process.env.FRONTEND_URL_PRODUCTION 
+        : process.env.FRONTEND_URL_DESARROLLO;
+
+      // Construir el enlace para restablecer la contraseña
+      const resetLink = `${frontendUrl}/resetPassword?token=${token}`;
+
       const personalizarEmail = emailTemplate
         .replace("{{name}}", name)
-        .replace("{{token}}", token as string);
+        .replace("{{resetLink}}", resetLink);
 
+      // Envío del correo al correo electrónico del usuario registrado
       sendEmail(
-        "naboko1367@godsigma.com",
+        existeUsuario.email, // Aquí usamos el correo electrónico del usuario
         "Cambio de contraseña",
         personalizarEmail
       );
 
       return resp.status(200).json({
         ok: true,
-        msg: "Proceso éxitoso",
+        msg: "Correo de recuperación enviado correctamente",
         usuario: existeUsuario,
       });
     }
