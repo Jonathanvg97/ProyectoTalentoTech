@@ -14,7 +14,6 @@ import fs from "fs";
 import RevokedTokenModel from "../models/revokedTokenModel.model";
 import { config } from "../config/config";
 
-
 const environment = config[process.env.NODE_ENV || 'desarrollo'];
 const frontendUrl = environment.frontendUrl;
 export const authenticateLogin = async (req: Request, res: Response) => {
